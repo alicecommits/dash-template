@@ -13,11 +13,12 @@ df = data_parsing_from_file.df
 # ----------------------------------------------------------------------------------- #
 # ------------------------------ date / time formatting ----------------------------- #
 
-date_str_pattern = "%a, %d %b %Y, %H:%M:%S %Z" # to change given date format
+DATE_STR_PATTERN = "%a, %d %b %Y, %H:%M:%S %Z" # to change given date format
+SOME_QTY_FIELD = "some_qty_field" # replace the str, it'll get called below
 
 # converts date str --> date object
 df['some_datetime_obj'] = df.apply(lambda row: datetime.strptime(
-    row["some_date_field"], date_str_pattern), axis = 1)
+    row["some_date_field"], DATE_STR_PATTERN), axis = 1)
 
 # extracts date into date and time columns as key(s) when merging
 # note: datetime obj --> str useful to use to other dataframes 
@@ -40,10 +41,10 @@ if DEBUG_df:
     print('df after time formatting: ', df)
 
 # ---------------------- formatting qty from str --> int ----------------------------- #
-df["some_qty_field"] = df.apply(lambda row: int(row["some_qty_field"]), axis = 1)
+df[SOME_QTY_FIELD] = df.apply(lambda row: int(row[SOME_QTY_FIELD]), axis = 1)
 if DEBUG_df:
     # should print <class 'numpy.int64'>
-    print('type of qty field entries: ', type(df["some_qty_field"].iloc[0]))
+    print('type of qty field entries: ', type(df[SOME_QTY_FIELD].iloc[0]))
     # print 1st 5 elts - change the nb for more or less.
     nb_to_preview = 5 
     print(f'preview df 1st {nb_to_preview} elts after qty str --> int: ', 

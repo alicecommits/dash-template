@@ -28,9 +28,14 @@ my_color_2 = ('rgba('+str(74)+','+str(219)+','+str(154)) # light green
 my_color_3 = ('rgba('+str(217)+','+str(60)+','+str(225)) # magenta-ish
 my_color = [my_color_1, my_color_2, my_color_3]
 
+
+
 # Most memory efficient: using groups from one same df
 fig = go.Figure()
 for i, (day, group) in enumerate(df_all_groups):
+    # if replacing with random color generator for n curves,
+    # then replace: for i, (day, group)... enumerate(...)
+    # with: for day, group in df_all_groups
     
     # other option: generate colors randomly when adding the trace
     '''
@@ -39,8 +44,9 @@ for i, (day, group) in enumerate(df_all_groups):
                 str(np.random.randint(0, high = 256)))
     '''
     fig.add_trace(go.Scatter(x = group['time_pdobj'],
-                             y = group["some_qty_field"],
+                             y = group[data_processing.SOME_QTY_FIELD],
                              mode="lines+markers",
+                             # remove [i] if my_color is randomly generated
                             marker={'color':my_color[i]+',1)'}, # 1 = full opacity,
                             line={"color":my_color[i]+',0.5)'}, # 0.5 = 50% opaque
                             name = str(day)))
@@ -58,7 +64,7 @@ fig.update_yaxes(title_text = "Your y-axis title here",
 # (SIMPLER) VERSION WITH PLOTLY EXPRESS -------------------------------------------------
 # Seems a little limited in options to customize the graphs further
 # However, good news: most update_* and add_* methods seem to remain functional
-fig_easy = px.line(df_no_group, x="time_pdobj", y="some_qty_field", color="date")
+fig_easy = px.line(df_no_group, x="time_pdobj", y=data_processing.SOME_QTY_FIELD, color="date")
 # marker seems unavailable with express?
 fig_easy.update_layout(title = "Your graph title here",
                   legend_title_text = "Your legend title here",
@@ -173,7 +179,7 @@ app.layout = html.Div(children=[
 # for memory-efficiency
 # to check the type of "ticker"
 def display_day_series(ticker):
-    fig = px.scatter(df_each_day_dict[ticker], x="time", y="some_qty_field")
+    fig = px.scatter(df_each_day_dict[ticker], x="time", y=data_processing.SOME_QTY_FIELD)
     return fig
 
 
